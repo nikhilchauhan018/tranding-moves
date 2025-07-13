@@ -9,14 +9,6 @@ import { getTrendingMovies, updateSearchCount } from "./lib/backend.js";
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-const API_OPTIONS = {
-  method: 'GET',
-  headers: {
-    accept: 'application/json',
-    Authorization: `Bearer ${API_KEY}`
-  }
-};
-
 const App = () => {
   const [debouncedMovieSearchTerm, setDebouncedMovieSearchTerm] = useState('');
   const [MovieSearchTerm, setMovieSearchTerm] = useState('');
@@ -34,10 +26,10 @@ const App = () => {
 
     try {
       const endpoint = query
-        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+        ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&api_key=${API_KEY}`
+        : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&api_key=${API_KEY}`;
 
-      const response = await fetch(endpoint, API_OPTIONS);
+      const response = await fetch(endpoint);
 
       if (!response.ok) {
         throw new Error('Failed to fetch movies');
@@ -84,20 +76,18 @@ const App = () => {
   return (
     <main>
       <div className="pattern" />
-
       <div className="wrapper">
         <header>
           <img src="./hero.png" alt="Hero Banner" />
-          <h1>Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle</h1>
-
+          <h1>
+            Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle
+          </h1>
           <MovieSearch MovieSearchTerm={MovieSearchTerm} setMovieSearchTerm={setMovieSearchTerm} />
         </header>
 
-      
         {Array.isArray(trendingMovies) && trendingMovies.length > 0 && (
           <section className="trending">
             <h2>Trending Movies</h2>
-
             <ul>
               {trendingMovies.map((movie, index) => (
                 <li key={movie.$id}>
@@ -109,10 +99,8 @@ const App = () => {
           </section>
         )}
 
-        
         <section className="all-movies">
           <h2>All Movies</h2>
-
           {isLoading ? (
             <LoaderCircle />
           ) : errorMessage ? (
