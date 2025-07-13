@@ -4,7 +4,7 @@ const MovieSearch = ({ MovieSearchTerm, setMovieSearchTerm }) => {
   return (
     <div className="MovieSearch">
       <div>
-        <img src="MovieSearch.svg" alt="MovieSearch" />
+        <img src="search.svg" alt="MovieSearch" />
 
         <input
           type="text"
